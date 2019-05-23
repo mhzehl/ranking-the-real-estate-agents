@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using RankingTheRealEstateAgents.Core;
+using RankingTheRealEstateAgents.Core.Policies;
 
 namespace RankingTheRealEstateAgents.Web
 {
@@ -26,6 +22,15 @@ namespace RankingTheRealEstateAgents.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
+            services.AddTransient<IRealEstateListingService, RealEstateListingService>();
+            services.AddHttpClient<IResilientFundaApiClient, ResilientFundaApiClient>(client =>
+            {
+                var baseAddress = Configuration["FundaClient.BaseAddress"];
+
+                client.BaseAddress = new Uri(baseAddress);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
