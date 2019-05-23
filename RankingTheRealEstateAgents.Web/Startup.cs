@@ -24,6 +24,7 @@ namespace RankingTheRealEstateAgents.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
+            services.AddTransient<IRealEstateListingService, RealEstateListingService>();
             services.AddHttpClient<IResilientFundaApiClient, ResilientFundaApiClient>(client =>
             {
                 var baseAddress = Configuration["FundaClient.BaseAddress"];
