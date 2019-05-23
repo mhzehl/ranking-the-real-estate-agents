@@ -19,8 +19,7 @@
         </h1>
         <p class="subheading font-weight-regular">
           Want to find out the top 10 of biggest real estate agents in Amsterdam?
-          Try and find out!
-
+          Check how many objects they have listed, with or without garden. Try and find out!
         </p>
       </v-flex>
 
