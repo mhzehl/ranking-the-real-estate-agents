@@ -29,8 +29,8 @@ yarn run build
 ```
 
 ### Built With
-.NET Core 2.1 - The framework used
-Vue.js - Frontend
-Yarn - Package manager
+- .NET Core 2.1
+- Vue.js
+- Yarn
 
 Enjoy!
