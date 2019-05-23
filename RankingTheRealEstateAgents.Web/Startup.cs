@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RankingTheRealEstateAgents.Core;
 using RankingTheRealEstateAgents.Core.Policies;
+using VueCliMiddleware;
 
 namespace RankingTheRealEstateAgents.Web
 {
@@ -22,6 +23,8 @@ namespace RankingTheRealEstateAgents.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot"; });
 
             services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
             services.AddTransient<IRealEstateListingService, RealEstateListingService>();
@@ -46,7 +49,26 @@ namespace RankingTheRealEstateAgents.Web
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "clientapp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseVueCli(npmScript: "serve", port: 8080);
+                }
+            });
         }
     }
 }

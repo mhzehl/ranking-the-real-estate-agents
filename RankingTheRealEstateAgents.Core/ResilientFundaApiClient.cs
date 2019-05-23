@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RankingTheRealEstateAgents.Core.Policies;
@@ -41,21 +42,23 @@ namespace RankingTheRealEstateAgents.Core
 
         private static string BuildUrl(string city, string filter, int currentPage)
         {
-            var buildUrl = $"?type=koop&zo=/";
+            //Todo: Remove special characters from search query
+
+            var buildUrl = new StringBuilder("?type=koop&zo=/");
 
             if (city != null)
             {
-                buildUrl = $"{buildUrl}{city.ToLowerInvariant()}";
+                buildUrl.Append(city);
             }
 
             if (filter != null)
             {
-                buildUrl = $"{buildUrl}/{filter}";
+                buildUrl.Append($"/{filter}");
             }
 
-            buildUrl = $"{buildUrl}/p{currentPage}";
+            buildUrl.Append($"/p{currentPage}");
 
-            return buildUrl;
+            return buildUrl.ToString();
         }
     }
 }
