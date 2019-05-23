@@ -2,24 +2,29 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using RankingTheRealEstateAgents.Core.Policies;
 using RankingTheRealEstateAgents.Data.Models;
 
 namespace RankingTheRealEstateAgents.Core
 {
-    public class FundaApiClient : IFundaApiClient
+    public class ResilientFundaApiClient : IResilientFundaApiClient
     {
         private readonly HttpClient _client;
+        private readonly ICustomPolicyWrap _customPolicyWrap;
 
-        public FundaApiClient(HttpClient client)
+        public ResilientFundaApiClient(HttpClient client, ICustomPolicyWrap customPolicyWrap)
         {
             _client = client;
+            _customPolicyWrap = customPolicyWrap;
         }
 
         public async Task<FundaResponse> QueryAsync(string city, string filter, int page = 1)
         {
             string url = BuildUrl(city, filter, page);
 
-            var response = await _client.GetAsync(url);
+            // Implement resiliency strategy to deal with faults while communicating
+            // with the Funda API.
+            var response = await _customPolicyWrap.DefineAndRetrieveResiliencyStrategy().ExecuteAsync(() => _client.GetAsync(url));
 
             if (!response.IsSuccessStatusCode)
             {

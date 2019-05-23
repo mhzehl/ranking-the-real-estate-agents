@@ -4,7 +4,7 @@ using RankingTheRealEstateAgents.Data.Models;
 
 namespace RankingTheRealEstateAgents.Core
 {
-    public interface IFundaApiClient
+    public interface IResilientFundaApiClient
     {
         Task<FundaResponse> QueryAsync(string city, string filter, int page = 1);
     }
