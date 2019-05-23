@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RankingTheRealEstateAgents.Core;
+using RankingTheRealEstateAgents.Core.Policies;
 
 namespace RankingTheRealEstateAgents.Web
 {
@@ -21,7 +22,9 @@ namespace RankingTheRealEstateAgents.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddHttpClient<IFundaApiClient, FundaApiClient>(client =>
+
+            services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
+            services.AddHttpClient<IResilientFundaApiClient, ResilientFundaApiClient>(client =>
             {
                 var baseAddress = Configuration["FundaClient.BaseAddress"];
 
