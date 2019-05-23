@@ -42,6 +42,8 @@ namespace RankingTheRealEstateAgents.Core
 
         private static string BuildUrl(string city, string filter, int currentPage)
         {
+            //Todo: Remove special characters from search query
+
             var buildUrl = new StringBuilder("?type=koop&zo=/");
 
             if (city != null)
