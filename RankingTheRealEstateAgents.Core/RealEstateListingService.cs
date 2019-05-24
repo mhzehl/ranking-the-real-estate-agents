@@ -17,7 +17,6 @@ namespace RankingTheRealEstateAgents.Core
         {
             var listAllObjects = new List<RealEstateObject>();
 
-            // Get results
             var result = await _client.QueryAsync(city, filter);
 
             while (result.PagingProperties.CurrentPage <= result.PagingProperties.PagesCount)
