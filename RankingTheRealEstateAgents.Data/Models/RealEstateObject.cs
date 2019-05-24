@@ -7,10 +7,10 @@ namespace RankingTheRealEstateAgents.Data.Models
     {
         public Guid Id { get; set; }
 
-        [JsonProperty("MakelaarId")]
+        [JsonProperty("makelaarId")]
         public int RealEstateAgentId { get; set; }
 
-        [JsonProperty("MakelaarNaam")]
+        [JsonProperty("makelaarNaam")]
         public string RealEstateAgentName { get; set; }
     }
 }
