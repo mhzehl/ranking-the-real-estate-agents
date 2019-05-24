@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -29,12 +30,9 @@ namespace RankingTheRealEstateAgents.Core
             if (!response.IsSuccessStatusCode)
                throw new HttpRequestException("Something went wrong. Please try again.");
 
-            using (var stream = await response.Content.ReadAsStreamAsync())
-            {
-                var streamContent = await new StreamReader(stream).ReadToEndAsync();
+            var json = await response.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<FundaResponse>(streamContent);
-            }
+            return JsonConvert.DeserializeObject<FundaResponse>(json);
         }
 
         private string BuildUrl(string city, string filter, int currentPage)
@@ -50,10 +48,10 @@ namespace RankingTheRealEstateAgents.Core
 
             if (filter != null)
             {
-                buildUrl.Append($"/{filter}");
+                buildUrl.Append("/").Append(filter);
             }
 
-            buildUrl.Append($"/p{currentPage}");
+            buildUrl.Append("/p").Append(currentPage);
 
             return buildUrl.ToString();
         }
