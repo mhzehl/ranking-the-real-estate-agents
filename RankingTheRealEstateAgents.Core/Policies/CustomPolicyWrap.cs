@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using Polly;
 using Polly.Wrap;
 
@@ -35,7 +34,7 @@ namespace RankingTheRealEstateAgents.Core.Policies
             // This is designed to handle Exceptions from the Funda API, as well as
             // a number of recoverable status messages, such as 500, 502, and 504.
             var circuitBreakerPolicyForRecoverable = Policy
-                .Handle<HttpResponseException>()
+                .Handle<Exception>()
                 .OrResult<HttpResponseMessage>(r => httpStatusCodesWorthRetrying.Contains(r.StatusCode))
                 .CircuitBreakerAsync(
                     handledEventsAllowedBeforeBreaking: 3,
