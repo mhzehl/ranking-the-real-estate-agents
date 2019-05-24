@@ -12,12 +12,12 @@ namespace RankingTheRealEstateAgents.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -26,7 +26,7 @@ namespace RankingTheRealEstateAgents.Web
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot"; });
 
-            services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
+            services.AddSingleton<ICustomPolicyWrap, CustomPolicyWrap>();
             services.AddTransient<IRealEstateListingService, RealEstateListingService>();
             services.AddHttpClient<IResilientFundaApiClient, ResilientFundaApiClient>(client =>
             {

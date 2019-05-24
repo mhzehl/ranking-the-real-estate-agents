@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using Polly;
 using Polly.Wrap;
 
@@ -14,7 +13,6 @@ namespace RankingTheRealEstateAgents.Core.Policies
         /// Creates a Polly-based resiliency strategy that helps deal with transient faults when communicating
         /// with the external Funda API service.
         /// </summary>
-        /// <returns></returns>
         public AsyncPolicyWrap<HttpResponseMessage> DefineAndRetrieveResiliencyStrategy()
         {
             // Define our waitAndRetry policy: retry n times with an exponential back off in case the Funda API throttles us for too many requests.
@@ -35,7 +33,7 @@ namespace RankingTheRealEstateAgents.Core.Policies
             // This is designed to handle Exceptions from the Funda API, as well as
             // a number of recoverable status messages, such as 500, 502, and 504.
             var circuitBreakerPolicyForRecoverable = Policy
-                .Handle<HttpResponseException>()
+                .Handle<Exception>()
                 .OrResult<HttpResponseMessage>(r => httpStatusCodesWorthRetrying.Contains(r.StatusCode))
                 .CircuitBreakerAsync(
                     handledEventsAllowedBeforeBreaking: 3,
@@ -48,9 +46,9 @@ namespace RankingTheRealEstateAgents.Core.Policies
 
         private static bool ShouldHandleWaitAndRetry(HttpResponseMessage e)
         {
-            return e.StatusCode == HttpStatusCode.ServiceUnavailable ||
-                   e.StatusCode == HttpStatusCode.TooManyRequests ||
-                   (e.StatusCode == HttpStatusCode.Unauthorized && e.ReasonPhrase == "Request limit exceeded");
+            return e.StatusCode == HttpStatusCode.ServiceUnavailable 
+                   || (int)e.StatusCode == 429 //TooManyRequests
+                   || (e.StatusCode == HttpStatusCode.Unauthorized && e.ReasonPhrase == "Request limit exceeded");
         }
     }
 }
