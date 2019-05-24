@@ -26,7 +26,7 @@ namespace RankingTheRealEstateAgents.Web
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot"; });
 
-            services.AddTransient<ICustomPolicyWrap, CustomPolicyWrap>();
+            services.AddSingleton<ICustomPolicyWrap, CustomPolicyWrap>();
             services.AddTransient<IRealEstateListingService, RealEstateListingService>();
             services.AddHttpClient<IResilientFundaApiClient, ResilientFundaApiClient>(client =>
             {
